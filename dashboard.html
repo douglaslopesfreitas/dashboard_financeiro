@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Simulador Financeiro – Plataforma Rede Abrigo</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f8;
+padding:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:30px;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+input{
+width:100%;
+padding:6px;
+margin-bottom:6px;
+}
+
+small{
+color:#666;
+display:block;
+margin-bottom:10px;
+}
+
+.ref{
+color:#1a7f37;
+font-size:12px;
+margin-bottom:12px;
+}
+
+button{
+padding:10px;
+background:#1a7f37;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.total{
+font-size:24px;
+font-weight:bold;
+color:#1a7f37;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Simulador Financeiro – Plataforma de Desejos</h1>
+
+<p>
+Ferramenta para testar cenários financeiros da plataforma de desejos e necessidades
+de crianças em acolhimento.
+</p>
+
+<div class="grid">
+
+<div class="box">
+
+<h2>Variáveis</h2>
+
+<label>Número de pedidos por ano</label>
+<input id="pedidos" value="1000">
+<small>Quantidade de desejos ou necessidades atendidas pela plataforma em um ano.</small>
+
+<label>Valor médio do pedido (R$)</label>
+<input id="pedido" value="100">
+<small>Valor médio necessário para atender cada pedido.</small>
+
+<label>Doação média para o pedido (R$)</label>
+<input id="doacaoPedido" value="50">
+<small>Valor médio que cada doador contribui.</small>
+
+<div class="ref">
+Referência comum em plataformas de microdoação: R$30 – R$70.
+</div>
+
+<label>Conversão para doação à Rede Abrigo (%)</label>
+<input id="conversao" value="30">
+
+<small>
+Percentual de doadores que também fazem uma contribuição voluntária
+para a organização.
+</small>
+
+<div class="ref">
+Benchmark internacional: cerca de 30% de conversão em plataformas como One Simple Wish.
+</div>
+
+<label>Doação média para a Rede Abrigo (R$)</label>
+<input id="doacaoRA" value="20">
+
+<small>Valor médio da contribuição voluntária.</small>
+
+<div class="ref">
+Em plataformas de doação digital, contribuições institucionais
+costumam variar entre R$10 e R$30.
+</div>
+
+<label>Float (%)</label>
+<input id="float" value="25">
+
+<small>
+Percentual do dinheiro que permanece temporariamente sob custódia
+da organização antes da execução do pedido.
+</small>
+
+<div class="ref">
+Float típico em plataformas financeiras e de crowdfunding:
+20% – 50% do volume mobilizado.
+</div>
+
+<label>Taxa administrativa (%)</label>
+<input id="taxa" value="5">
+
+<small>
+Percentual do volume mobilizado destinado à manutenção da plataforma.
+</small>
+
+<div class="ref">
+Plataformas de doação normalmente cobram entre 5% e 10%.
+</div>
+
+<label>Rendimento anual (%)</label>
+<input id="rendimento" value="10.5">
+
+<small>Rendimento estimado das aplicações financeiras.</small>
+
+<div class="ref">
+Referência aproximada do CDI brasileiro em cenários recentes.
+</div>
+
+<label>Custo anual da plataforma (R$)</label>
+<input id="custo" value="30000">
+
+<small>Custo operacional estimado da plataforma.</small>
+
+<button onclick="calcular()">Atualizar cenário</button>
+
+</div>
+
+<div class="box">
+
+<h2>Resultados</h2>
+
+<p><b>Volume mobilizado:</b> <span id="volume"></span></p>
+
+<p>
+<small>Total arrecadado para atender os pedidos.</small>
+</p>
+
+<p><b>Número de doações:</b> <span id="doacoes"></span></p>
+
+<p><b>Float médio:</b> <span id="floatValor"></span></p>
+
+<hr>
+
+<p><b>Rendimento do float:</b> <span id="rendimentoValor"></span></p>
+
+<p><b>Contribuição para Rede Abrigo:</b> <span id="raValor"></span></p>
+
+<p><b>Receita de taxa administrativa:</b> <span id="taxaValor"></span></p>
+
+<hr>
+
+<p class="total">
+Receita total anual: <span id="total"></span>
+</p>
+
+<p>
+<b>Ponto de equilíbrio:</b> <span id="equilibrio"></span>
+</p>
+
+<small>
+Quantidade aproximada de pedidos necessários para cobrir os custos da plataforma.
+</small>
+
+</div>
+
+<div class="box">
+
+<h2>Composição da receita</h2>
+
+<canvas id="grafico"></canvas>
+
+</div>
+
+</div>
+
+<script>
+
+let chart
+
+function moeda(v){
+return "R$ " + v.toLocaleString("pt-BR",{minimumFractionDigits:2})
+}
+
+function calcular(){
+
+let pedidos = parseFloat(document.getElementById("pedidos").value)
+let pedido = parseFloat(document.getElementById("pedido").value)
+let doacaoPedido = parseFloat(document.getElementById("doacaoPedido").value)
+
+let conversao = parseFloat(document.getElementById("conversao").value)/100
+let doacaoRA = parseFloat(document.getElementById("doacaoRA").value)
+
+let float = parseFloat(document.getElementById("float").value)/100
+let taxa = parseFloat(document.getElementById("taxa").value)/100
+let rendimento = parseFloat(document.getElementById("rendimento").value)/100
+
+let custo = parseFloat(document.getElementById("custo").value)
+
+let volume = pedidos * pedido
+let doacoes = volume / doacaoPedido
+
+let floatValor = volume * float
+let rendimentoValor = floatValor * rendimento
+
+let doadoresRA = doacoes * conversao
+let receitaRA = doadoresRA * doacaoRA
+
+let receitaTaxa = volume * taxa
+
+let total = rendimentoValor + receitaRA + receitaTaxa
+
+document.getElementById("volume").innerText = moeda(volume)
+document.getElementById("doacoes").innerText = Math.round(doacoes)
+document.getElementById("floatValor").innerText = moeda(floatValor)
+
+document.getElementById("rendimentoValor").innerText = moeda(rendimentoValor)
+document.getElementById("raValor").innerText = moeda(receitaRA)
+document.getElementById("taxaValor").innerText = moeda(receitaTaxa)
+
+document.getElementById("total").innerText = moeda(total)
+
+let pedidosEquilibrio = custo / (total / pedidos)
+
+document.getElementById("equilibrio").innerText =
+Math.round(pedidosEquilibrio) + " pedidos/ano"
+
+let dados = [rendimentoValor, receitaRA, receitaTaxa]
+
+if(chart){ chart.destroy() }
+
+chart = new Chart(
+document.getElementById("grafico"),
+{
+type:"pie",
+data:{
+labels:["Rendimento Float","Contribuição Rede Abrigo","Taxa administrativa"],
+datasets:[{data:dados}]
+}
+}
+)
+
+}
+
+calcular()
+
+</script>
+
+</body>
+</html>
