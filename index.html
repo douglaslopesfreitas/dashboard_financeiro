@@ -2,62 +2,122 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Simulador Financeiro – Plataforma Rede Abrigo</title>
+<title>Simulador Financeiro | Rede Abrigo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
 body{
-font-family:Arial;
+font-family:'Inter',sans-serif;
 background:#f4f6f8;
-padding:30px;
+margin:0;
+padding:40px;
+color:#333;
+}
+
+:root{
+--azul:#359AD4;
+--azul-escuro:#175070;
+}
+
+.header{
+text-align:center;
+margin-bottom:40px;
+}
+
+.logo{
+height:70px;
+margin-bottom:10px;
+}
+
+h1{
+color:var(--azul-escuro);
+margin-bottom:5px;
+}
+
+.subtitle{
+color:#666;
 }
 
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr 1fr;
-gap:30px;
+gap:25px;
 }
 
 .box{
 background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
+padding:25px;
+border-radius:16px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+}
+
+h2{
+color:var(--azul-escuro);
+margin-top:0;
+}
+
+label{
+font-weight:600;
+font-size:14px;
 }
 
 input{
 width:100%;
-padding:6px;
-margin-bottom:6px;
+padding:8px;
+margin:5px 0 10px 0;
+border-radius:8px;
+border:1px solid #ddd;
 }
 
 small{
-color:#666;
+color:#777;
 display:block;
 margin-bottom:10px;
+font-size:12px;
 }
 
 .ref{
-color:#1a7f37;
 font-size:12px;
-margin-bottom:12px;
+color:var(--azul);
+margin-bottom:10px;
 }
 
 button{
-padding:10px;
-background:#1a7f37;
+background:var(--azul);
 color:white;
 border:none;
-border-radius:5px;
+padding:12px;
+width:100%;
+border-radius:10px;
+font-weight:600;
 cursor:pointer;
 }
 
+button:hover{
+background:var(--azul-escuro);
+}
+
+.result{
+margin-bottom:8px;
+}
+
 .total{
-font-size:24px;
-font-weight:bold;
-color:#1a7f37;
+font-size:26px;
+font-weight:700;
+color:var(--azul);
+margin-top:10px;
+}
+
+.custo{
+margin-top:30px;
+}
+
+ul{
+padding-left:18px;
 }
 
 </style>
@@ -66,16 +126,19 @@ color:#1a7f37;
 
 <body>
 
-<h1>Simulador Financeiro – Plataforma de Desejos</h1>
+<div class="header">
 
-<p>
-Este simulador permite testar cenários financeiros para uma plataforma de desejos e necessidades
-de crianças e adolescentes em acolhimento.
+<img src="logo.png" class="logo">
+
+<h1>Simulador Financeiro</h1>
+
+<p class="subtitle">
+Plataforma de desejos e necessidades de crianças em acolhimento
 </p>
 
-<div class="grid">
+</div>
 
-<!-- VARIÁVEIS -->
+<div class="grid">
 
 <div class="box">
 
@@ -83,122 +146,100 @@ de crianças e adolescentes em acolhimento.
 
 <label>Número de pedidos por ano</label>
 <input id="pedidos" value="1000">
+
 <small>Quantidade de desejos ou necessidades atendidas pela plataforma em um ano.</small>
 
 <label>Valor médio do pedido (R$)</label>
 <input id="pedido" value="100">
+
 <small>Valor médio necessário para atender cada pedido.</small>
 
 <label>Doação média para o pedido (R$)</label>
 <input id="doacaoPedido" value="50">
-<small>Valor médio que cada doador contribui.</small>
 
 <div class="ref">
-Referência comum em plataformas de microdoação: R$30 – R$70.
+Referência comum em plataformas de microdoação: R$30 – R$70
 </div>
 
 <label>Conversão para doação à organização (%)</label>
 <input id="conversao" value="30">
 
-<small>
-Percentual de doadores que também fazem uma contribuição voluntária
-para a organização.
-</small>
+<small>Percentual de doadores que também fazem contribuição voluntária.</small>
 
 <div class="ref">
-Benchmark internacional: cerca de 30% de conversão em plataformas como One Simple Wish.
+Benchmark internacional: cerca de 30%
 </div>
 
 <label>Doação média para a organização (R$)</label>
 <input id="doacaoRA" value="20">
 
-<small>Valor médio dessa contribuição voluntária.</small>
-
 <div class="ref">
-Contribuições institucionais costumam variar entre R$10 e R$30.
+Valor comum entre R$10 e R$30
 </div>
 
 <label>Float (%)</label>
 <input id="float" value="25">
 
-<small>
-Percentual do dinheiro que permanece temporariamente sob custódia
-antes da execução do pedido.
-</small>
-
 <div class="ref">
-Float típico em plataformas financeiras: 20% – 50%.
+Float típico entre 20% e 50%
 </div>
 
 <label>Taxa administrativa (%)</label>
 <input id="taxa" value="5">
 
-<small>
-Percentual do valor mobilizado destinado à manutenção da plataforma.
-</small>
-
 <div class="ref">
-Plataformas de doação costumam cobrar entre 5% e 10%.
+Plataformas normalmente cobram entre 5% e 10%
 </div>
 
 <label>Rendimento anual (%)</label>
 <input id="rendimento" value="10.5">
 
-<small>Rendimento estimado de aplicações financeiras seguras.</small>
-
 <div class="ref">
-Referência aproximada do CDI brasileiro em cenários recentes.
+Referência aproximada do CDI brasileiro
 </div>
 
 <label>Custo anual da plataforma (R$)</label>
 <input id="custo" value="35000">
 
-<small>
-Custo estimado de operação da plataforma.
-</small>
-
 <button onclick="calcular()">Atualizar cenário</button>
 
 </div>
-
-<!-- RESULTADOS -->
 
 <div class="box">
 
 <h2>Resultados</h2>
 
-<p><b>Volume mobilizado:</b> <span id="volume"></span></p>
-<small>Total arrecadado para atender os pedidos.</small>
+<p class="result"><b>Volume mobilizado:</b> <span id="volume"></span></p>
 
-<p><b>Número de doações:</b> <span id="doacoes"></span></p>
+<p class="result"><b>Número de doações:</b> <span id="doacoes"></span></p>
 
-<p><b>Float médio:</b> <span id="floatValor"></span></p>
-
-<hr>
-
-<p><b>Rendimento do float:</b> <span id="rendimentoValor"></span></p>
-
-<p><b>Contribuição para organização:</b> <span id="raValor"></span></p>
-
-<p><b>Receita de taxa administrativa:</b> <span id="taxaValor"></span></p>
+<p class="result"><b>Float médio:</b> <span id="floatValor"></span></p>
 
 <hr>
 
-<p class="total">
+<p class="result"><b>Rendimento do float:</b> <span id="rendimentoValor"></span></p>
+
+<p class="result"><b>Contribuição para organização:</b> <span id="raValor"></span></p>
+
+<p class="result"><b>Receita de taxa administrativa:</b> <span id="taxaValor"></span></p>
+
+<hr>
+
+<div class="total">
 Receita total anual: <span id="total"></span>
-</p>
+</div>
 
 <p>
+
 <b>Ponto de equilíbrio:</b> <span id="equilibrio"></span>
+
 </p>
 
 <small>
-Quantidade aproximada de pedidos necessários para cobrir os custos da plataforma.
+Quantidade aproximada de pedidos necessários para cobrir os custos da plataforma
 </small>
 
 </div>
-
-<!-- GRÁFICO -->
 
 <div class="box">
 
@@ -210,51 +251,51 @@ Quantidade aproximada de pedidos necessários para cobrir os custos da plataform
 
 </div>
 
-<br>
-
-<!-- CUSTO DA PLATAFORMA -->
-
-<div class="box">
+<div class="box custo">
 
 <h2>Custo estimado da plataforma</h2>
 
 <p>
-Para avaliar a sustentabilidade da plataforma, também é necessário considerar
+
+Para avaliar a sustentabilidade da plataforma também é necessário considerar
 o custo anual de operação.
+
 </p>
 
 <h3>Custo estimado no primeiro ano</h3>
 
 <ul>
-<li><b>Cenário mínimo (MVP):</b> R$35.000 / ano</li>
-<li><b>Cenário estruturado:</b> R$70.000 / ano</li>
+
+<li><b>Cenário mínimo (MVP):</b> R$35.000 por ano</li>
+
+<li><b>Cenário estruturado:</b> R$70.000 por ano</li>
+
 </ul>
 
-<p>Esses valores consideram três principais tipos de custo:</p>
+<p>Esses custos consideram três elementos principais:</p>
 
 <ul>
 
-<li>
-<b>Construção da plataforma</b><br>
-Desenvolvimento inicial do sistema, banco de dados e integrações.
+<li><b>Construção da plataforma</b><br>
+Desenvolvimento inicial do sistema e integrações.
 </li>
 
-<li>
-<b>Operação</b><br>
-Gestão da plataforma, acompanhamento dos pedidos e relação com os abrigos.
+<li><b>Operação</b><br>
+Acompanhamento dos pedidos e relação com abrigos.
 </li>
 
-<li>
-<b>Comunicação</b><br>
+<li><b>Comunicação</b><br>
 Divulgação da plataforma e mobilização de doadores.
 </li>
 
 </ul>
 
 <p>
+
 <b>Importante:</b> o primeiro ano tende a ter um custo maior porque inclui
-a construção da plataforma. Nos anos seguintes, esse custo tende a diminuir,
-ficando concentrado principalmente na operação e comunicação.
+a construção da plataforma. Nos anos seguintes o custo tende a diminuir,
+ficando concentrado na operação e comunicação.
+
 </p>
 
 </div>
@@ -269,52 +310,51 @@ return "R$ " + v.toLocaleString("pt-BR",{minimumFractionDigits:2})
 
 function calcular(){
 
-let pedidos = parseFloat(document.getElementById("pedidos").value)
-let pedido = parseFloat(document.getElementById("pedido").value)
-let doacaoPedido = parseFloat(document.getElementById("doacaoPedido").value)
+let pedidos=parseFloat(document.getElementById("pedidos").value)
+let pedido=parseFloat(document.getElementById("pedido").value)
+let doacaoPedido=parseFloat(document.getElementById("doacaoPedido").value)
 
-let conversao = parseFloat(document.getElementById("conversao").value)/100
-let doacaoRA = parseFloat(document.getElementById("doacaoRA").value)
+let conversao=parseFloat(document.getElementById("conversao").value)/100
+let doacaoRA=parseFloat(document.getElementById("doacaoRA").value)
 
-let float = parseFloat(document.getElementById("float").value)/100
-let taxa = parseFloat(document.getElementById("taxa").value)/100
-let rendimento = parseFloat(document.getElementById("rendimento").value)/100
+let float=parseFloat(document.getElementById("float").value)/100
+let taxa=parseFloat(document.getElementById("taxa").value)/100
+let rendimento=parseFloat(document.getElementById("rendimento").value)/100
 
-let custo = parseFloat(document.getElementById("custo").value)
+let custo=parseFloat(document.getElementById("custo").value)
 
-let volume = pedidos * pedido
-let doacoes = volume / doacaoPedido
+let volume=pedidos*pedido
+let doacoes=volume/doacaoPedido
 
-let floatValor = volume * float
-let rendimentoValor = floatValor * rendimento
+let floatValor=volume*float
+let rendimentoValor=floatValor*rendimento
 
-let doadoresRA = doacoes * conversao
-let receitaRA = doadoresRA * doacaoRA
+let doadoresRA=doacoes*conversao
+let receitaRA=doadoresRA*doacaoRA
 
-let receitaTaxa = volume * taxa
+let receitaTaxa=volume*taxa
 
-let total = rendimentoValor + receitaRA + receitaTaxa
+let total=rendimentoValor+receitaRA+receitaTaxa
 
-document.getElementById("volume").innerText = moeda(volume)
-document.getElementById("doacoes").innerText = Math.round(doacoes)
-document.getElementById("floatValor").innerText = moeda(floatValor)
+document.getElementById("volume").innerText=moeda(volume)
+document.getElementById("doacoes").innerText=Math.round(doacoes)
+document.getElementById("floatValor").innerText=moeda(floatValor)
 
-document.getElementById("rendimentoValor").innerText = moeda(rendimentoValor)
-document.getElementById("raValor").innerText = moeda(receitaRA)
-document.getElementById("taxaValor").innerText = moeda(receitaTaxa)
+document.getElementById("rendimentoValor").innerText=moeda(rendimentoValor)
+document.getElementById("raValor").innerText=moeda(receitaRA)
+document.getElementById("taxaValor").innerText=moeda(receitaTaxa)
 
-document.getElementById("total").innerText = moeda(total)
+document.getElementById("total").innerText=moeda(total)
 
-let pedidosEquilibrio = custo / (total / pedidos)
+let pedidosEquilibrio=custo/(total/pedidos)
 
-document.getElementById("equilibrio").innerText =
-Math.round(pedidosEquilibrio) + " pedidos/ano"
+document.getElementById("equilibrio").innerText=Math.round(pedidosEquilibrio)+" pedidos/ano"
 
-let dados = [rendimentoValor, receitaRA, receitaTaxa]
+let dados=[rendimentoValor,receitaRA,receitaTaxa]
 
-if(chart){ chart.destroy() }
+if(chart){chart.destroy()}
 
-chart = new Chart(
+chart=new Chart(
 document.getElementById("grafico"),
 {
 type:"pie",
